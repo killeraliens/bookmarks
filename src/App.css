@@ -1,0 +1,8 @@
+
+.App * {
+  box-sizing: border-box;
+}
+
+.App {
+  background-color: beige;
+}

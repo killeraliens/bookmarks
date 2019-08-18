@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AddBookmark from '../src/AddBookmark';
+import AddBookmark from './AddBookmark';
 
 describe('AddBookmark Component', ()=>{
   it('renders without crashing', ()=>{
