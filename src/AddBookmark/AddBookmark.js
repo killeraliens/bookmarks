@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './AddBookmark.css';
 
 class AddBookmark extends Component {
+
   render() {
     return(
       <div className="AddBookmark">
@@ -17,7 +18,7 @@ class AddBookmark extends Component {
           <input type="number" name="rating" id="rating" max="5" min="1"/>
 
           <div className="AddBookmark__buttons">
-            <button>Cancel</button>
+            <button onClick={(e) => this.props.showAddBookmark(false)}>Cancel</button>
             <button type="submit">Save</button>
           </div>
 

@@ -7,8 +7,8 @@ class BookmarkApp extends Component {
 
     return(
       <div className="BookmarkApp">
+          <Fab showAddBookmark={this.props.showAddBookmark}/>
           <BookmarksList bookmarks={this.props.bookmarks}/>
-          <Fab />
       </div>
     )
   }
