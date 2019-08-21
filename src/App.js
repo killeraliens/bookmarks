@@ -8,12 +8,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      bookmarks: [
-        {title: 'A title sample', url: 'http://goatsguide.com', description: 'my fav events site', rating: 5},
-        {title: 'Another title sample', url: 'https://bandcamp.com/killeraliens/wishlist', description: 'albums i want', rating: 3}
-      ],
-      showAddBookmark: false,
-      errMessage: null
+      bookmarks: [],
+      showAddBookmark: false
     }
   }
 
@@ -37,10 +33,10 @@ class App extends Component {
     .then(responseJson => {
       this.setState({
         bookmarks: responseJson,
-        errMessage: null
+        error: null
       })
     })
-    .catch(err => this.setState({ errMessage: err.message}));
+    .catch(err => this.setState({ error: err.message}));
   }
 
   showAddBookmark(show) {
@@ -48,18 +44,32 @@ class App extends Component {
     this.setState({ showAddBookmark: show })
   }
 
+  addBookmark(bookmark) {
+    console.log('bookmark adding to app state');
+    this.setState({
+      bookmarks: [...this.state.bookmarks, bookmark],
+      showAddBookmark: false
+    });
+  }
+
+   handleShowError(show) {
+    this.setState({
+      error: show
+    })
+  }
+
   render() {
     const loadingSquare = <div className="loadingsquare"></div>;
     const page = this.state.showAddBookmark
-     ? <AddBookmark showAddBookmark={(e) => this.showAddBookmark(false)}/>
+     ? <AddBookmark showAddBookmark={(e) => this.showAddBookmark(false)} handleAddBookmark={bookmark => this.addBookmark(bookmark)} />
      : <BookmarkApp bookmarks={this.state.bookmarks} showAddBookmark={(e) => this.showAddBookmark(true)}/>;
-    const errorMessage = this.state.errMessage
-      ? <ErrorMessage message={this.state.errMessage}/>
+    const errorMessage = this.state.error
+      ? <ErrorMessage message={this.state.error} showError={e=> this.handleShowError(null)}/>
       : null;
     return (
       <div className='App'>
-        { page }
         { errorMessage }
+        { page }
       </div>
     )
   }

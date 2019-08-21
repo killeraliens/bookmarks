@@ -7,11 +7,9 @@ export default function ErrorMessage(props) {
       <div className="ErrorMessage__content">
         {props.message}
       </div>
+      <button onClick={e => props.showError(null)}>Close</button>
     </div>
   )
 }
 
-ErrorMessage.defaultProps = {
-  message: 'Something went wrong'
-}
 
