@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './AddBookmark.css';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import {Link} from 'react-router-dom';
 
 class AddBookmark extends Component {
   constructor(props) {
@@ -48,6 +49,7 @@ class AddBookmark extends Component {
       });
       //console.log(data);
       //console.log(newBookmark);
+      this.props.history.push('/')
       this.props.handleAddBookmark(newBookmark);
     })
     .catch(err => {
@@ -138,7 +140,8 @@ class AddBookmark extends Component {
             onChange={e => this.ratingChanged(e.target.value)}
           />
           <div className="AddBookmark__buttons">
-            <button onClick={(e) => this.props.showAddBookmark(false)}>Cancel</button>
+            {/*<button onClick={(e) => this.props.showAddBookmark(false)}>Cancel</button>*/}
+            <Link to='/'><button>Cancel</button></Link>
             <button type="submit" >Save</button>
           </div>
 

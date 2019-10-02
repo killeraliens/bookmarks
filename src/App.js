@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import AddBookmark from './AddBookmark/AddBookmark';
 import BookmarkApp from './BookmarkApp/BookmarkApp';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
+import { Route, Switch } from 'react-router-dom';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      bookmarks: [],
-      showAddBookmark: false
+      bookmarks: []
     }
   }
 
@@ -39,17 +39,12 @@ class App extends Component {
     .catch(err => this.setState({ error: err.message}));
   }
 
-  showAddBookmark(show) {
-    // console.log('show add bookmark', {show})
-    this.setState({ showAddBookmark: show })
-  }
-
   addBookmark(bookmark) {
     console.log('bookmark adding to app state');
     this.setState({
-      bookmarks: [...this.state.bookmarks, bookmark],
-      showAddBookmark: false
+      bookmarks: [...this.state.bookmarks, bookmark]
     });
+
   }
 
    handleShowError(show) {
@@ -59,17 +54,31 @@ class App extends Component {
   }
 
   render() {
-    const loadingSquare = <div className="loadingsquare"></div>;
-    const page = this.state.showAddBookmark
-     ? <AddBookmark showAddBookmark={(e) => this.showAddBookmark(false)} handleAddBookmark={bookmark => this.addBookmark(bookmark)} />
-     : <BookmarkApp bookmarks={this.state.bookmarks} showAddBookmark={(e) => this.showAddBookmark(true)}/>;
     const errorMessage = this.state.error
       ? <ErrorMessage message={this.state.error} showError={e=> this.handleShowError(null)}/>
       : null;
+
     return (
       <div className='App'>
         { errorMessage }
-        { page }
+        <Switch>
+          <Route exact path='/' render={(routeProps) => {
+            return(
+              <BookmarkApp
+                bookmarks={this.state.bookmarks}
+                {...routeProps}
+              />
+            )
+          }} />
+          <Route path='/add-bookmark' render={(routeProps) => {
+            return(
+              <AddBookmark
+                handleAddBookmark={bookmark => this.addBookmark(bookmark)}
+                {...routeProps}
+              />
+            )
+          }} />
+        </Switch>
       </div>
     )
   }
