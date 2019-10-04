@@ -3,6 +3,10 @@ import Rating from '../Rating/Rating';
 import './Bookmark.css'
 
 class Bookmark extends Component {
+  static defaultProps = {
+    onClickDelete: () => {}
+  }
+
   render() {
     return(
       <div className="Bookmark">
@@ -16,6 +20,7 @@ class Bookmark extends Component {
           {this.props.description}
         </div>
         <Rating rating={this.props.rating}/>
+        <button type="button" onClick={() => this.props.onClickDelete(this.props.id)}>Delete</button>
       </div>
     )
   }
