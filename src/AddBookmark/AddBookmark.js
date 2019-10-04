@@ -4,22 +4,32 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import {Link} from 'react-router-dom';
 
 class AddBookmark extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      title: "",
-      url: "",
-      description: "",
-      rating: 1
-    }
+  static defaultProps = {
+    handleAddBookmark: () => {}
   }
+
+  state = {
+    title: "",
+    url: "",
+    description: "",
+    rating: 1,
+    error: null
+  }
+
 
   handleSubmit(e) {
     e.preventDefault();
     //const newBookmark = (({title, url, description, rating}) => ({title, url, description, rating}))(this.state);
-    const bookmarkState = this.state;
-    const createBookmark = (props) => props;
-    const newBookmark = createBookmark(bookmarkState);
+    const {title, url, description, rating} = this.state ;
+    const newBookmark = {
+      title: title,
+      url: url,
+      description: description,
+      rating: rating
+    }
+    //const newBookmark = Object.assign({}, )
+
+
     const options = {
       method: "POST",
       body: JSON.stringify(newBookmark),
@@ -28,9 +38,9 @@ class AddBookmark extends Component {
         "Authorization": "Bearer $2a$10$jHBJKSk2Pbmf87E0YSjwk.AT3s22WIGNOQsQWcn/qy5Zwz5O3Sr5q"
       }
     };
-    const url = 'https://tf-ed-bookmarks-api.herokuapp.com/v3/bookmarks';
+    const fetchUrl = 'https://tf-ed-bookmarks-api.herokuapp.com/v3/bookmarks';
 
-    fetch(url, options)
+    fetch(fetchUrl, options)
     .then(res => {
       if(!res.ok) {
         //console.log('error about to be thrown');
@@ -47,10 +57,9 @@ class AddBookmark extends Component {
         rating: 1,
         error: null
       });
-      //console.log(data);
-      //console.log(newBookmark);
       this.props.history.push('/')
-      this.props.handleAddBookmark(newBookmark);
+      console.log('data', data)
+      this.props.handleAddBookmark(data);
     })
     .catch(err => {
         this.setState({
@@ -60,40 +69,21 @@ class AddBookmark extends Component {
 
   }
 
-  titleChanged(title) {
-    console.log('title changed');
-    this.setState({
-      title
-    });
+  updateState = (e) => {
+    const {name, value} = e.target
+    let newState = { ...this.state, [name]: value}
+
+    return this.setState(newState)
   }
 
-  urlChanged(url) {
-    this.setState({
-      url
-    });
-  }
-
-  descriptionChanged(description) {
-    this.setState({
-      description
-    });
-  }
-
-  ratingChanged(rating) {
-    this.setState({
-      rating
-    })
-  }
 
   handleShowError(show) {
-    // console.log('handling error');
     this.setState({
       error: show
     })
   }
 
   render() {
-    //console.log('is there an error', this.state.error);
     const error = this.state.error
       ? <ErrorMessage message={this.state.error} showError={(e) => this.handleShowError(null)}/>
       : null;
@@ -110,7 +100,7 @@ class AddBookmark extends Component {
             id="title"
             placeholder="Name your bookmark"
             value={this.state.title}
-            onChange={e => this.titleChanged(e.target.value)}
+            onChange={this.updateState}
           />
           <label htmlFor="url">Url</label>
           <input
@@ -119,7 +109,7 @@ class AddBookmark extends Component {
             id="url"
             placeholder="Url"
             value={this.state.url}
-            onChange={e => this.urlChanged(e.target.value)}
+            onChange={this.updateState}
           />
           <label htmlFor="description">Description</label>
           <textarea
@@ -127,7 +117,7 @@ class AddBookmark extends Component {
             id="description"
             placeholder="Describe your bookmark"
             value={this.state.description}
-            onChange={e => this.descriptionChanged(e.target.value)}
+            onChange={this.updateState}
           />
           <label htmlFor="rating">Rating</label>
           <input
@@ -137,11 +127,10 @@ class AddBookmark extends Component {
             max="5"
             min="1"
             value={this.state.rating}
-            onChange={e => this.ratingChanged(e.target.value)}
+            onChange={this.updateState}
           />
           <div className="AddBookmark__buttons">
-            {/*<button onClick={(e) => this.props.showAddBookmark(false)}>Cancel</button>*/}
-            <Link to='/'><button>Cancel</button></Link>
+            <button type="button" onClick={this.props.onClickCancel}>Cancel</button>
             <button type="submit" >Save</button>
           </div>
 

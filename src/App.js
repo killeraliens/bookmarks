@@ -39,7 +39,7 @@ class App extends Component {
     .catch(err => this.setState({ error: err.message}));
   }
 
-  addBookmark(bookmark) {
+  addBookmark = (bookmark) => {
     console.log('bookmark adding to app state');
     this.setState({
       bookmarks: [...this.state.bookmarks, bookmark]
@@ -54,30 +54,38 @@ class App extends Component {
   }
 
   render() {
-    const errorMessage = this.state.error
+    const { error } = this.state
       ? <ErrorMessage message={this.state.error} showError={e=> this.handleShowError(null)}/>
       : null;
 
     return (
       <div className='App'>
-        { errorMessage }
+        { error }
         <Switch>
-          <Route exact path='/' render={(routeProps) => {
-            return(
-              <BookmarkApp
-                bookmarks={this.state.bookmarks}
-                {...routeProps}
-              />
-            )
-          }} />
-          <Route path='/add-bookmark' render={(routeProps) => {
-            return(
-              <AddBookmark
-                handleAddBookmark={bookmark => this.addBookmark(bookmark)}
-                {...routeProps}
-              />
-            )
-          }} />
+          <Route
+            exact
+            path='/'
+            render={(routeProps) => {
+              return(
+                <BookmarkApp
+                  bookmarks={this.state.bookmarks}
+                  {...routeProps}
+                />
+              )
+            }}
+          />
+          <Route
+            path='/add-bookmark'
+            render={(routeProps) => {
+              return(
+                <AddBookmark
+                  handleAddBookmark={this.addBookmark}
+                  onClickCancel={() => routeProps.history.push('/')}
+                  {...routeProps}
+                />
+              )
+            }}
+          />
         </Switch>
       </div>
     )
