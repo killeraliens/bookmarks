@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
+import config from '../config';
 import './AddBookmark.css';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import {Link} from 'react-router-dom';
+import BookmarksContext from '../BookmarksContext';
 
 class AddBookmark extends Component {
-  static defaultProps = {
-    handleAddBookmark: () => {}
-  }
+  static contextType = BookmarksContext;
 
   state = {
     title: "",
@@ -27,18 +27,16 @@ class AddBookmark extends Component {
       description: description,
       rating: rating
     }
-    //const newBookmark = Object.assign({}, )
-
 
     const options = {
       method: "POST",
       body: JSON.stringify(newBookmark),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer $2a$10$jHBJKSk2Pbmf87E0YSjwk.AT3s22WIGNOQsQWcn/qy5Zwz5O3Sr5q"
+        "Authorization": `Bearer ${config.API_KEY}`
       }
     };
-    const fetchUrl = 'https://tf-ed-bookmarks-api.herokuapp.com/v3/bookmarks';
+    const fetchUrl = config.API_ENDPOINT;
 
     fetch(fetchUrl, options)
     .then(res => {
@@ -58,8 +56,7 @@ class AddBookmark extends Component {
         error: null
       });
       this.props.history.push('/')
-      console.log('data', data)
-      this.props.handleAddBookmark(data);
+      this.context.addBookmark(data);
     })
     .catch(err => {
         this.setState({
@@ -81,6 +78,10 @@ class AddBookmark extends Component {
     this.setState({
       error: show
     })
+  }
+
+  handleClickCancel = (e) => {
+    this.props.history.push('/')
   }
 
   render() {
@@ -130,7 +131,7 @@ class AddBookmark extends Component {
             onChange={this.updateState}
           />
           <div className="AddBookmark__buttons">
-            <button type="button" onClick={this.props.onClickCancel}>Cancel</button>
+            <button type="button" onClick={this.handleClickCancel}>Cancel</button>
             <button type="submit" >Save</button>
           </div>
 
