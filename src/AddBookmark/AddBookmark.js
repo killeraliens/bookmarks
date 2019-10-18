@@ -25,7 +25,8 @@ class AddBookmark extends Component {
       title: title,
       url: url,
       description: description,
-      rating: rating
+      rating: rating,
+      id: title + description + Math.floor(Math.random() * Math.ceil(1000)).toString()
     }
 
     const options = {
