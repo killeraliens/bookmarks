@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
 import './BookmarksList.css'
 ;import Bookmark from '../Bookmark/Bookmark';
+import BookmarksContext from '../BookmarksContext';
 
 class BookmarksList extends Component {
+  static contextType = BookmarksContext;
+
   render() {
-    const bookmarks = this.props.bookmarks.map((bookmark, i) => {
-      return <Bookmark key={i} {...bookmark}/>
+    const bookmarks = this.context.bookmarks.map((bookmark, i) => {
+      return <Bookmark key={bookmark.id} {...bookmark}/>
     })
     return(
       <div className="BookmarksList">

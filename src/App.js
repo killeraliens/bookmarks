@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
+import config from './config';
+import BookmarksContext from './BookmarksContext';
 import AddBookmark from './AddBookmark/AddBookmark';
-import BookmarkApp from './BookmarkApp/BookmarkApp';
+import Fab from './Fab/Fab';
+import BookmarksList from './BookmarksList/BookmarksList';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
 import { Route, Switch } from 'react-router-dom';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      bookmarks: []
-    }
+
+  state = {
+    bookmarks: [],
+    error: null
   }
 
+
   componentDidMount() {
-    const apiKey= `$2a$10$jHBJKSk2Pbmf87E0YSjwk.AT3s22WIGNOQsQWcn/qy5Zwz5O3Sr5q`;
-    const getUrl = `https://tf-ed-bookmarks-api.herokuapp.com/v3/bookmarks`;
+    const apiKey= config.API_KEY;
+    const getUrl = config.API_ENDPOINT;
     const options = {
       method: 'GET',
       headers: {
@@ -44,7 +47,6 @@ class App extends Component {
     this.setState({
       bookmarks: [...this.state.bookmarks, bookmark]
     });
-
   }
 
    handleShowError(show) {
@@ -53,40 +55,41 @@ class App extends Component {
     })
   }
 
+  deleteBookmark = (id) => {
+    const newBookmarks = this.state.bookmarks.filter(bookmark => bookmark.id !== id);
+    console.log('deleting bookmark, curr count at', this.state.bookmarks.count)
+    this.setState({
+      bookmarks: newBookmarks
+    }, () => {console.log('new count at', this.state.bookmarks.count)})
+
+  }
+
   render() {
     const { error } = this.state
-      ? <ErrorMessage message={this.state.error} showError={e=> this.handleShowError(null)}/>
+      ? <ErrorMessage message={this.state.error} showError={()=> this.handleShowError(null)}/>
       : null;
+
+    const contextValue = {
+      bookmarks: this.state.bookmarks,
+      addBookmark: this.addBookmark,
+      deleteBookmark: this.deleteBookmark
+    };
 
     return (
       <div className='App'>
-        { error }
-        <Switch>
-          <Route
-            exact
-            path='/'
-            render={(routeProps) => {
-              return(
-                <BookmarkApp
-                  bookmarks={this.state.bookmarks}
-                  {...routeProps}
-                />
-              )
-            }}
-          />
-          <Route
-            path='/add-bookmark'
-            render={(routeProps) => {
-              return(
-                <AddBookmark
-                  handleAddBookmark={this.addBookmark}
-                  onClickCancel={() => routeProps.history.push('/')}
-                  {...routeProps}
-                />
-              )
-            }}
-          />
-        </Switch>
+        <BookmarksContext.Provider value={contextValue}>
+            <Fab />
+            <Route
+              exact
+              path='/'
+              component={BookmarksList}
+            />
+            <Route
+              path='/add-bookmark'
+              component={AddBookmark}
+            />
+
+        </BookmarksContext.Provider>
       </div>
     )
   }
