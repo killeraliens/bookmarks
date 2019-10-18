@@ -8,8 +8,10 @@ function deleteBookmarkReq(id, callback) {
 
   const options = {
     method: 'DELETE',
+    // mode: 'no-cors',
     headers: {
-      'authorizaton': `Bearer ${config.API_ENDPOINT}`,
+      "Content-Type": "application/json",
+       "Authorization": `Bearer ${config.API_KEY}`
     }
   }
 
@@ -20,12 +22,13 @@ function deleteBookmarkReq(id, callback) {
       // return res.json().then(err => {
       //   throw err
       // })
-      throw new Error(res)
+     throw new Error(res.message)
     }
+    console.log('ok')
     return res.json()
   })
   .then(data => {
-    console.log(data);
+    console.log({data});
     callback(id);
   })
   .catch(err => {
@@ -57,7 +60,7 @@ class Bookmark extends Component {
             <Rating rating={this.props.rating}/>
             <button
               type="button"
-              onClick={() => deleteBookmarkReq(this.props.id, context.deleteBookmark) }
+              onClick={() => {deleteBookmarkReq(this.props.id, context.deleteBookmark)} }
             >
               Delete
             </button>

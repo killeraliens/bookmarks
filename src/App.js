@@ -57,9 +57,10 @@ class App extends Component {
 
   deleteBookmark = (id) => {
     const newBookmarks = this.state.bookmarks.filter(bookmark => bookmark.id !== id);
+    console.log('deleting bookmark, curr count at', this.state.bookmarks.count)
     this.setState({
       bookmarks: newBookmarks
-    })
+    }, () => {console.log('new count at', this.state.bookmarks.count)})
 
   }
 
