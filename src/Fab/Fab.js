@@ -2,20 +2,22 @@ import React, { Component } from 'react';
 import './Fab.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 class Fab extends Component {
 
   render() {
     return(
       <div className="Fab">
-        <Link to='/add-bookmark'>
-          <button><FontAwesomeIcon icon={faPlus} /></button>
-        </Link>
+          <button
+            aria-label="add new bookmark"
+          >
+            <FontAwesomeIcon icon={faPlus} onClick={() => {this.props.history.push('/add-bookmark')}}/>
+          </button>
       </div>
     )
   }
 }
 
 
-export default Fab;
+export default withRouter(Fab);

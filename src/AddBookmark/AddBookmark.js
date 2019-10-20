@@ -132,8 +132,19 @@ class AddBookmark extends Component {
             onChange={this.updateState}
           />
           <div className="AddBookmark__buttons">
-            <button type="button" onClick={this.handleClickCancel}>Cancel</button>
-            <button type="submit" >Save</button>
+            <button
+              type="button"
+              aria-label="cancel new bookmark"
+              onClick={this.handleClickCancel}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              aria-label="submit new bookmark"
+            >
+              Save
+            </button>
           </div>
 
         </form>
