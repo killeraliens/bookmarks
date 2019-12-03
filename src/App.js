@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import config from './config';
 import BookmarksContext from './BookmarksContext';
 import AddBookmark from './AddBookmark/AddBookmark';
+import EditBookmark from './EditBookmark/EditBookmark'
 import Fab from './Fab/Fab';
 import BookmarksList from './BookmarksList/BookmarksList';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
@@ -61,8 +62,9 @@ class App extends Component {
     this.setState({
       bookmarks: newBookmarks
     }, () => {console.log('new count at', this.state.bookmarks.count)})
-
   }
+
+  updateBookmark = (id, patchBody) => {}
 
   render() {
     const { error } = this.state
@@ -72,7 +74,8 @@ class App extends Component {
     const contextValue = {
       bookmarks: this.state.bookmarks,
       addBookmark: this.addBookmark,
-      deleteBookmark: this.deleteBookmark
+      deleteBookmark: this.deleteBookmark,
+      updateBookmark: this.updateBookmark
     };
 
     return (
@@ -87,6 +90,10 @@ class App extends Component {
             <Route
               path='/add-bookmark'
               component={AddBookmark}
+            />
+            <Route
+              path='/edit-bookmark/:bookmarkId'
+              component={EditBookmark}
             />
 
         </BookmarksContext.Provider>

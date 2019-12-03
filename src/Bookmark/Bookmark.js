@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import Rating from '../Rating/Rating';
 import config from '../config'
 import BookmarksContext from '../BookmarksContext'
@@ -64,6 +65,7 @@ class Bookmark extends Component {
             >
               Delete
             </button>
+            <Link to={`/edit-bookmark/${this.props.id}`}>Edit Bookmark</Link>
           </div>
         )
       }}

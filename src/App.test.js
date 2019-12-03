@@ -1,16 +1,54 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
+import { mount } from 'enzyme';
+import { expect } from 'chai';
+//import {BrowserRouter} from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import App from '../src/App';
+import Fab from './Fab/Fab'
+import BookmarksList from './BookmarksList/BookmarksList';
+
+//jest.mock('./App');
 
 describe('App Component', ()=>{
-  it('renders without crashing', ()=>{
-    const div = document.createElement('div');
-    ReactDOM.render(
-      <BrowserRouter>
+
+  it('mounts without crashing', () => {
+    mount(
+      <MemoryRouter>
         <App />
-      </BrowserRouter>,
-      div);
-    ReactDOM.unmountComponentAtNode(div);
+      </MemoryRouter>
+    )
   })
+
+  it('/ renders BookmarksList ', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    )
+    expect(wrapper.find(BookmarksList)).to.have.lengthOf(1)
+  })
+
+
+  it('renders an add bookmark Fab upon mount', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    )
+
+    expect(wrapper.find(Fab)).to.have.lengthOf(1)
+  })
+
+  it('has classname App', () => {
+    const wrapper = mount(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    )
+
+    expect(wrapper.find('div').first().hasClass('App')).to.equal(true)
+  })
+
+
 })
