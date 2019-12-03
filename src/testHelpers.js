@@ -1,5 +1,5 @@
 const context = {
-  notes: [
+  bookmarks: [
     {
       "id": 1,
       "title": "Dogs",

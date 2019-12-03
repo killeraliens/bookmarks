@@ -6,6 +6,7 @@ import EditBookmark from './EditBookmark/EditBookmark'
 import Fab from './Fab/Fab';
 import BookmarksList from './BookmarksList/BookmarksList';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
+import NotFound from './NotFound/NotFound'
 import { Route, Switch } from 'react-router-dom';
 
 class App extends Component {
@@ -81,7 +82,8 @@ class App extends Component {
     return (
       <div className='App'>
         <BookmarksContext.Provider value={contextValue}>
-            <Fab />
+          <Fab />
+          <Switch>
             <Route
               exact
               path='/'
@@ -95,7 +97,10 @@ class App extends Component {
               path='/edit-bookmark/:bookmarkId'
               component={EditBookmark}
             />
-
+            <Route
+              component={NotFound}
+            />
+          </Switch>
         </BookmarksContext.Provider>
       </div>
     )
