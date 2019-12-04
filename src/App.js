@@ -65,7 +65,14 @@ class App extends Component {
     }, () => {console.log('new count at', this.state.bookmarks.count)})
   }
 
-  updateBookmark = (id, patchBody) => {}
+  updateBookmark = (id, patchBody) => {
+    const bmIndex = this.state.bookmarks.findIndex(bm => bm.id === id)
+    const bmArr = [...this.state.bookmarks]
+    bmArr[bmIndex] = { id, patchBody }
+    this.setState({
+      bookmarks: bmArr
+    })
+  }
 
   render() {
     const { error } = this.state

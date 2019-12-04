@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import BookmarksContext from '../BookmarksContext'
 import NotFound from '../NotFound/NotFound'
 import config from '../config';
-import ErrorMessage from '../ErrorMessage/ErrorMessage'
+import context from '../testHelpers';
 
 class EditBookmark extends Component {
   // constructor(props) {
@@ -22,10 +22,9 @@ class EditBookmark extends Component {
     url: "",
     description: "",
     rating: 1,
-    error: null
+    error: null,
+    loading: false
   }
-
-
 
   componentDidMount() {
     const { bookmarkId } = this.props.match.params
@@ -44,14 +43,16 @@ class EditBookmark extends Component {
       })
       .then(resJson => {
         let bookmark = { ...resJson }
-        let { id, ...bookmarkState } = bookmark
+        let { id, loading, ...bookmarkState } = bookmark
+
         this.setState({
           ...bookmarkState,
           error: null
         })
       })
       .catch(error => {
-        this.setState({ error})
+        console.log(error)
+        this.setState({ error })
       })
   }
 
@@ -62,20 +63,56 @@ class EditBookmark extends Component {
     return this.setState(newState)
   }
 
+  handleSubmit = (e) => {
+    e.preventDefault()
+    const { bookmarkId } = this.props.match.params
+    let thisState = { ...this.state }
+    let { error, loading, ...patchBody } = thisState
+    const options = {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${config.API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(patchBody)
+    }
+    fetch(`${config.API_ENDPOINT}/${bookmarkId}`, options)
+      .then(res => {
+        if(!res.ok) {
+          throw new Error('Could not update your bookmark')
+        }
+
+        this.setState({
+          title: "",
+          url: "",
+          description: "",
+          rating: 1,
+          error: null,
+          loading: false
+        })
+        this.context.updateBookmark(bookmarkId, patchBody)
+        //this.props.history.push(`/${bookmarkId}`)
+        this.props.history.push(`/`)
+      })
+      .catch(error => {
+        this.setState({ error })
+      })
+  }
+
   render() {
     const { error } = this.state
 
     if (error) {
       const message = error.message
         ? error.message
-        : `Error loading form`
+        : error.status
       return <NotFound message={message} />
     }
 
     return(
       <div className="EditBookmark">
         { error }
-        <form className='EditBookmark__form' onSubmit={e => this.handleSubmit(e)}>
+        <form className='EditBookmark__form' onSubmit={this.handleSubmit}>
           <h1>Edit Bookmark</h1>
           <label htmlFor="title">Title</label>
           <input
