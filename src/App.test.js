@@ -2,15 +2,16 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { MemoryRouter } from 'react-router';
-//import toJson from 'enzyme-to-json'
+import toJson from 'enzyme-to-json'
 import App from '../src/App';
 import BookmarksList from './BookmarksList/BookmarksList';
 import Bookmark from './Bookmark/Bookmark';
 import NotFound from './NotFound/NotFound';
 import EditBookmark from './EditBookmark/EditBookmark'
 import AddBookmark from './AddBookmark/AddBookmark';
+
 import context from './testHelpers'
-import BookmarksContext from './BookmarksContext'
+import BookmarksContext from './BookmarksContext';
 
 
 
@@ -54,16 +55,17 @@ describe('App Component', ()=>{
 
   //I would like context injection here so it doesn't fail with id 1 but does with 66
   //(using __mocks__ folder not explicit component imports)
-  it('route /edit-bookmark/id renders EditBookmark component', () => {
+  it.skip('route /edit-bookmark/id renders EditBookmark component', () => {
     const wrapper = mount(
-      <MemoryRouter initialEntries={['/edit-bookmark/1']}>
+      <MemoryRouter initialEntries={['/edit-bookmark/66']}>
         <App>
           <BookmarksContext.Provider value={context} />
         </App>
       </MemoryRouter>
     )
-    expect(wrapper.find(EditBookmark)).to.have.lengthOf(1)
-    expect(wrapper.find(NotFound)).to.have.lengthOf(0)
+    console.log(toJson(wrapper))
+    expect(wrapper.find(EditBookmark)).to.have.lengthOf(0)
+    expect(wrapper.find(NotFound)).to.have.lengthOf(1)
 
   })
 

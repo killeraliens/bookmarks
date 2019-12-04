@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import BookmarksContext from '../BookmarksContext'
 import NotFound from '../NotFound/NotFound'
 import config from '../config';
@@ -16,6 +17,14 @@ class EditBookmark extends Component {
   //   }
   // }
   static contextType = BookmarksContext;
+  static propTypes = {
+    match: PropTypes.shape({
+      params: PropTypes.object,
+    }),
+    history: PropTypes.shape({
+      push: PropTypes.func
+    }).isRequired
+  }
 
   state = {
     title: "",
