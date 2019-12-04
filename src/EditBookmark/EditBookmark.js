@@ -23,7 +23,7 @@ class EditBookmark extends Component {
     description: "",
     rating: 1,
     error: null,
-    loading: false
+    isFetching: false
   }
 
   componentDidMount() {
@@ -34,6 +34,8 @@ class EditBookmark extends Component {
         'Authorization': `Bearer ${config.API_KEY}`,
       }
     }
+    this.setState({ isFetching: true })
+
     fetch(`${config.API_ENDPOINT}/${bookmarkId}`, options)
       .then(res => {
         if (!res.ok) {
@@ -43,16 +45,20 @@ class EditBookmark extends Component {
       })
       .then(resJson => {
         let bookmark = { ...resJson }
-        let { id, loading, ...bookmarkState } = bookmark
+        let { id, isFetching, ...bookmarkState } = bookmark
 
         this.setState({
           ...bookmarkState,
-          error: null
+          error: null,
+          isFetching: false
         })
       })
       .catch(error => {
         console.log(error)
-        this.setState({ error })
+        this.setState({
+          error,
+          isFetching: false
+        })
       })
   }
 
@@ -67,7 +73,7 @@ class EditBookmark extends Component {
     e.preventDefault()
     const { bookmarkId } = this.props.match.params
     let thisState = { ...this.state }
-    let { error, loading, ...patchBody } = thisState
+    let { error, isFetching, ...patchBody } = thisState
     const options = {
       method: 'PATCH',
       headers: {
@@ -88,7 +94,7 @@ class EditBookmark extends Component {
           description: "",
           rating: 1,
           error: null,
-          loading: false
+          isFetching: false
         })
         this.context.updateBookmark(bookmarkId, patchBody)
         //this.props.history.push(`/${bookmarkId}`)
@@ -100,7 +106,7 @@ class EditBookmark extends Component {
   }
 
   render() {
-    const { error } = this.state
+    const { error, isFetching } = this.state
 
     if (error) {
       const message = error.message
@@ -109,9 +115,13 @@ class EditBookmark extends Component {
       return <NotFound message={message} />
     }
 
+    const loadingNotification = isFetching
+      ? <div>Loading...</div>
+      : null
+
     return(
       <div className="EditBookmark">
-        { error }
+        {loadingNotification}
         <form className='EditBookmark__form' onSubmit={this.handleSubmit}>
           <h1>Edit Bookmark</h1>
           <label htmlFor="title">Title</label>
