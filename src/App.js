@@ -81,6 +81,7 @@ class App extends Component {
 
     return (
       <div className='App'>
+        { error }
         <BookmarksContext.Provider value={contextValue}>
           <Fab />
           <Switch>

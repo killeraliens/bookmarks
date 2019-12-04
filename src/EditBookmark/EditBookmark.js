@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import BookmarksContext from '../BookmarksContext'
 import NotFound from '../NotFound/NotFound'
+import config from '../config';
+import ErrorMessage from '../ErrorMessage/ErrorMessage'
 
 class EditBookmark extends Component {
   // constructor(props) {
@@ -13,27 +15,120 @@ class EditBookmark extends Component {
   //     rating: 1
   //   }
   // }
+  static contextType = BookmarksContext;
+
   state = {
-      title: ``,
-      url: ``,
-      description: ``,
-      rating: 1
+    title: "",
+    url: "",
+    description: "",
+    rating: 1,
+    error: null
   }
 
-  static contextType = BookmarksContext;
+
 
   componentDidMount() {
     const { bookmarkId } = this.props.match.params
-    // if(!bookmarkId) {
-    //   this.setState({notFound: true})
-    // }
-    //console.log(this.props)
+    const options = {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${config.API_KEY}`,
+      }
+    }
+    fetch(`${config.API_ENDPOINT}/${bookmarkId}`, options)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(res.error)
+        }
+        return res.json()
+      })
+      .then(resJson => {
+        let bookmark = { ...resJson }
+        let { id, ...bookmarkState } = bookmark
+        this.setState({
+          ...bookmarkState,
+          error: null
+        })
+      })
+      .catch(error => {
+        this.setState({ error})
+      })
+  }
+
+  updateState = (e) => {
+    const { name, value } = e.target
+    let newState = { ...this.state, [name]: value }
+
+    return this.setState(newState)
   }
 
   render() {
+    const { error } = this.state
+
+    if (error) {
+      const message = error.message
+        ? error.message
+        : `Error loading form`
+      return <NotFound message={message} />
+    }
+
     return(
       <div className="EditBookmark">
-        <h2>Edit Bookmark</h2>
+        { error }
+        <form className='EditBookmark__form' onSubmit={e => this.handleSubmit(e)}>
+          <h1>Edit Bookmark</h1>
+          <label htmlFor="title">Title</label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            placeholder="Name your bookmark"
+            value={this.state.title}
+            onChange={this.updateState}
+          />
+          <label htmlFor="url">Url</label>
+          <input
+            type="text"
+            name="url"
+            id="url"
+            placeholder="Url"
+            value={this.state.url}
+            onChange={this.updateState}
+          />
+          <label htmlFor="description">Description</label>
+          <textarea
+            name="description"
+            id="description"
+            placeholder="Describe your bookmark"
+            value={this.state.description}
+            onChange={this.updateState}
+          />
+          <label htmlFor="rating">Rating</label>
+          <input
+            type="number"
+            name="rating"
+            id="rating"
+            max="5"
+            min="1"
+            value={this.state.rating}
+            onChange={this.updateState}
+          />
+          <div className="AddBookmark__buttons">
+            <button
+              type="button"
+              aria-label="cancel new bookmark"
+              onClick={() => this.props.history.push('/')}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              aria-label="submit new bookmark"
+            >
+              Save
+            </button>
+          </div>
+        </form>
       </div>
     )
   }

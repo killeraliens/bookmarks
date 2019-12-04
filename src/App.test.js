@@ -1,68 +1,27 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
-//import {BrowserRouter} from 'react-router-dom';
 import { MemoryRouter } from 'react-router';
-import toJson from 'enzyme-to-json'
+//import toJson from 'enzyme-to-json'
 import App from '../src/App';
-import Fab from './Fab/Fab'
 import BookmarksList from './BookmarksList/BookmarksList';
+import Bookmark from './Bookmark/Bookmark';
 import NotFound from './NotFound/NotFound';
 import EditBookmark from './EditBookmark/EditBookmark'
-import Bookmark from './Bookmark/Bookmark'
-
-import BookmarksContext from './BookmarksContext';
+import AddBookmark from './AddBookmark/AddBookmark';
 import context from './testHelpers'
+import BookmarksContext from './BookmarksContext'
 
-//jest.mock('./__mocks__/provider');
+
 
 describe('App Component', ()=>{
 
-  it('mounts without crashing', () => {
+  it('renders without crashing', () => {
     mount(
       <MemoryRouter>
         <App />
       </MemoryRouter>
     )
-  })
-
-  it('/ renders BookmarksList ', () => {
-    const wrapper = mount(
-      <MemoryRouter initialEntries={['/']}>
-        <App />
-      </MemoryRouter>
-    )
-    expect(wrapper.find(BookmarksList)).to.have.lengthOf(1)
-  })
-
-  it('/nonexistentpaths render NotFound', () => {
-    const wrapper = mount(
-      <MemoryRouter initialEntries={['/nonexistentpath']}>
-        <App />
-      </MemoryRouter>
-    )
-    expect(wrapper.find(NotFound)).to.have.lengthOf(1)
-  })
-
-
-  it('renders an add bookmark Fab upon mount', () => {
-    const wrapper = mount(
-      <MemoryRouter initialEntries={['/']}>
-        <App/>
-
-      </MemoryRouter>
-    )
-    expect(wrapper.find(Fab)).to.have.lengthOf(1)
-  })
-
-  it('renders an add bookmark list with bookmarks upon mount', () => {
-    const wrapper = mount(
-      <MemoryRouter initialEntries={['/']}>
-        <App />
-      </MemoryRouter>
-    )
-    expect(wrapper.find(Bookmark)).to.have.lengthOf(2)
   })
 
   it('has classname App', () => {
@@ -75,36 +34,50 @@ describe('App Component', ()=>{
   })
 
 
-})
-
-describe('EditBookmark component', () => {
-
-  it('renders when passed good bookmark id', () => {
-    const bookmarkId = 1
+  it('route / renders BookmarksList component', () => {
     const wrapper = mount(
-      <MemoryRouter initialEntries={[`/edit-bookmark/${bookmarkId}`]}>
-        <App>
-          {/* <BookmarksContext.Provider context={context} /> */}
-        </App>
-
+      <MemoryRouter initialEntries={['/']}>
+        <App/>
       </MemoryRouter>
     )
+    expect(wrapper.find(BookmarksList)).to.have.lengthOf(1)
+  })
 
+  it('route /add-bookmark renders AddBookmark component', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/add-bookmark']}>
+        <App />
+      </MemoryRouter>
+    )
+    expect(wrapper.find(AddBookmark)).to.have.lengthOf(1)
+  })
+
+  //I would like context injection here so it doesn't fail with id 1 but does with 66
+  //(using __mocks__ folder not explicit component imports)
+  it('route /edit-bookmark/id renders EditBookmark component', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/edit-bookmark/1']}>
+        <App>
+          <BookmarksContext.Provider value={context} />
+        </App>
+      </MemoryRouter>
+    )
     expect(wrapper.find(EditBookmark)).to.have.lengthOf(1)
     expect(wrapper.find(NotFound)).to.have.lengthOf(0)
+
   })
 
-  it('renders not found page when passed bad bookmark id', () => {
-    const bookmarkId = 666
+  it('route /nonexistentpaths renders NotFound component', () => {
     const wrapper = mount(
-      <MemoryRouter initialEntries={[`/edit-bookmark/${bookmarkId}`]}>
-        <App>
-          {/* <BookmarksContext.Provider context={context} /> */}
-        </App>
+      <MemoryRouter initialEntries={['/nonexistentpath']}>
+        <App />
       </MemoryRouter>
     )
-    expect(wrapper.find(EditBookmark)).to.have.lengthOf(0)
     expect(wrapper.find(NotFound)).to.have.lengthOf(1)
   })
+
 })
+
+
+
 

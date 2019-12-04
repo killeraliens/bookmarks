@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import config from '../config';
 import './AddBookmark.css';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
-import {Link} from 'react-router-dom';
+//import {Link} from 'react-router-dom';
 import BookmarksContext from '../BookmarksContext';
 
 class AddBookmark extends Component {
@@ -25,8 +25,7 @@ class AddBookmark extends Component {
       title: title,
       url: url,
       description: description,
-      rating: rating,
-      id: title + description + Math.floor(Math.random() * Math.ceil(1000)).toString()
+      rating: rating
     }
 
     const options = {

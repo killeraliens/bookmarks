@@ -13,4 +13,8 @@ export default function ErrorMessage(props) {
   )
 }
 
+ErrorMessage.defaultProps = {
+  message: 'uh - oh there was a problem'
+}
+
 
