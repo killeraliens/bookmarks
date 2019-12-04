@@ -11,15 +11,13 @@ import { Route, Switch } from 'react-router-dom';
 
 class App extends Component {
 
-
   state = {
     bookmarks: [],
     error: null
   }
 
-
-  componentDidMount() {
-    const apiKey= config.API_KEY;
+  fetchBookmarks = () => {
+    const apiKey = config.API_KEY;
     const getUrl = config.API_ENDPOINT;
     const options = {
       method: 'GET',
@@ -29,19 +27,29 @@ class App extends Component {
       }
     }
     fetch(getUrl, options)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(response.statusText)
-    })
-    .then(responseJson => {
-      this.setState({
-        bookmarks: responseJson,
-        error: null
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error(response.statusText)
       })
-    })
-    .catch(err => this.setState({ error: err.message}));
+      .then(responseJson => {
+        this.setState({
+          bookmarks: responseJson,
+          error: null
+        })
+      })
+      .catch(err => this.setState({ error: err.message }));
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      this.fetchBookmarks()
+    }, 1000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   addBookmark = (bookmark) => {
@@ -49,12 +57,6 @@ class App extends Component {
     this.setState({
       bookmarks: [...this.state.bookmarks, bookmark]
     });
-  }
-
-   handleShowError(show) {
-    this.setState({
-      error: show
-    })
   }
 
   deleteBookmark = (id) => {
@@ -71,6 +73,12 @@ class App extends Component {
     bmArr[bmIndex] = { id, patchBody }
     this.setState({
       bookmarks: bmArr
+    })
+  }
+
+  handleShowError(show) {
+    this.setState({
+      error: show
     })
   }
 
