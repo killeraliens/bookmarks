@@ -7,9 +7,11 @@ import EditBookmark from './EditBookmark';
 import App from '../App'
 //import NotFound from '../NotFound/NotFound'
 
-//I am using this context because
+
 // import BookmarksContext from '../BookmarksContext'
 // import context from '../testHelpers'
+// I have tried importing/using context with two items above, as well as
+// expicitly calling the provider mock file. (in Thinkful lessons, this is not necessary)
 jest.mock('../__mocks__/provider')
 
 describe('EditBookmark component', () => {
