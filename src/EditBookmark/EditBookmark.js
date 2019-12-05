@@ -90,6 +90,7 @@ class EditBookmark extends Component {
         }
 
         this.setState({
+          id: null,
           title: "",
           url: "",
           description: "",
