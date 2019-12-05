@@ -1,13 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 //import { BrowserRouter } from 'react-router-dom';
 import { MemoryRouter } from 'react-router';
-import { mount, shallow } from 'enzyme'
+import { mount } from 'enzyme'
 import { expect} from 'chai'
 import EditBookmark from './EditBookmark';
 import App from '../App'
-import NotFound from '../NotFound/NotFound'
-import { jsxEmptyExpression } from '@babel/types';
+//import NotFound from '../NotFound/NotFound'
 
 //I am using this context because
 // import BookmarksContext from '../BookmarksContext'

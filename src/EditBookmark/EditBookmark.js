@@ -6,16 +6,7 @@ import config from '../config';
 import context from '../testHelpers';
 
 class EditBookmark extends Component {
-  // constructor(props) {
-  //   super(props);
 
-  //   this.state = {
-  //     title: ``,
-  //     url: ``,
-  //     description: ``,
-  //     rating: 1
-  //   }
-  // }
   static contextType = BookmarksContext;
   static propTypes = {
     match: PropTypes.shape({
@@ -27,6 +18,7 @@ class EditBookmark extends Component {
   }
 
   state = {
+    id: null,
     title: "",
     url: "",
     description: "",
@@ -48,13 +40,14 @@ class EditBookmark extends Component {
     fetch(`${config.API_ENDPOINT}/${bookmarkId}`, options)
       .then(res => {
         if (!res.ok) {
-          throw new Error(res.error)
+          //throw new Error(res.error)
+          return res.json().then(error => Promise.reject((error)))
         }
         return res.json()
       })
       .then(resJson => {
         let bookmark = { ...resJson }
-        let { id, isFetching, ...bookmarkState } = bookmark
+        let { error, isFetching, ...bookmarkState } = bookmark
 
         this.setState({
           ...bookmarkState,
@@ -63,7 +56,6 @@ class EditBookmark extends Component {
         })
       })
       .catch(error => {
-        console.log(error)
         this.setState({
           error,
           isFetching: false
@@ -94,7 +86,7 @@ class EditBookmark extends Component {
     fetch(`${config.API_ENDPOINT}/${bookmarkId}`, options)
       .then(res => {
         if(!res.ok) {
-          throw new Error('Could not update your bookmark')
+          return res.json().then(error => Promise.reject(error))
         }
 
         this.setState({
@@ -105,12 +97,15 @@ class EditBookmark extends Component {
           error: null,
           isFetching: false
         })
-        this.context.updateBookmark(bookmarkId, patchBody)
+        this.context.updateBookmark(patchBody)
         //this.props.history.push(`/${bookmarkId}`)
         this.props.history.push(`/`)
       })
       .catch(error => {
-        this.setState({ error })
+        this.setState({
+          error,
+          isFetching: false
+         })
       })
   }
 
@@ -120,7 +115,7 @@ class EditBookmark extends Component {
     if (error) {
       const message = error.message
         ? error.message
-        : error.status
+        : 'Error'
       return <NotFound message={message} />
     }
 

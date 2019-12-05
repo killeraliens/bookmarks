@@ -31,7 +31,8 @@ class App extends Component {
         if (response.ok) {
           return response.json();
         }
-        throw new Error(response.statusText)
+
+        return response.json().then(error => Promise.reject(error))
       })
       .then(responseJson => {
         this.setState({
@@ -39,18 +40,21 @@ class App extends Component {
           error: null
         })
       })
-      .catch(err => this.setState({ error: err.message }));
+      .catch(error => {
+        console.log(error)
+        this.setState({ error })
+      });
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => {
+    // this.interval = setInterval(() => {
       this.fetchBookmarks()
-    }, 1000)
+    // }, 1000)
   }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
+  // componentWillUnmount() {
+  //   clearInterval(this.interval);
+  // }
 
   addBookmark = (bookmark) => {
     console.log('bookmark adding to app state');
@@ -67,12 +71,13 @@ class App extends Component {
     }, () => {console.log('new count at', this.state.bookmarks.count)})
   }
 
-  updateBookmark = (id, patchBody) => {
-    const bmIndex = this.state.bookmarks.findIndex(bm => bm.id === id)
-    const bmArr = [...this.state.bookmarks]
-    bmArr[bmIndex] = { id, patchBody }
+  updateBookmark = (updatedBookmark) => {
+    //const bmIndex = this.state.bookmarks.findIndex(bm => bm.id === id)
+    //const bmArr = [...this.state.bookmarks]
+    const newBookmarks = this.state.bookmarks.map(bm => bm.id !== updatedBookmark.id ? bm : updatedBookmark)
+
     this.setState({
-      bookmarks: bmArr
+      bookmarks: newBookmarks
     })
   }
 
@@ -83,8 +88,8 @@ class App extends Component {
   }
 
   render() {
-    const { error } = this.state
-      ? <ErrorMessage message={this.state.error} showError={()=> this.handleShowError(null)}/>
+    const error = this.state.error
+      ? <ErrorMessage message={this.state.error.message} showError={()=> this.handleShowError(null)}/>
       : null;
 
     const contextValue = {

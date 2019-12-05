@@ -6,7 +6,7 @@ export default function ErrorMessage(props) {
   return (
     <div className="ErrorMessage">
       <div className="ErrorMessage__content">
-        {props.message}
+        <p>{props.message}</p>
       </div>
       <button aria-label="close error" onClick={() => props.showError(null)}>Close</button>
     </div>
