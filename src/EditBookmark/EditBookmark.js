@@ -103,6 +103,7 @@ class EditBookmark extends Component {
         this.props.history.push(`/`)
       })
       .catch(error => {
+
         this.setState({
           error,
           isFetching: false
@@ -113,10 +114,11 @@ class EditBookmark extends Component {
   render() {
     const { error, isFetching } = this.state
 
+
     if (error) {
-      const message = error.message
-        ? error.message
-        : 'Error'
+      const message = error.error.message
+        ? error.error.message
+        : 'Error loading bookmark form'
       return <NotFound message={message} />
     }
 
