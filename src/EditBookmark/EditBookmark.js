@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import BookmarksContext from '../BookmarksContext'
 import NotFound from '../NotFound/NotFound'
 import config from '../config';
-import context from '../testHelpers';
 
 class EditBookmark extends Component {
 
