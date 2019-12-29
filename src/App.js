@@ -17,7 +17,7 @@ class App extends Component {
   }
 
   fetchBookmarks = () => {
-    const apiKey = config.REACT_APP_API_KEY;
+    const apiKey = config.API_KEY;
     const getUrl = config.API_ENDPOINT;
     const options = {
       method: 'GET',
