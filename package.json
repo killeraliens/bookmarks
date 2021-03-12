@@ -42,7 +42,7 @@
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "enzyme-to-json": "^3.4.3",
-    "react-dev-utils": "^9.0.3",
+    "react-dev-utils": "^11.0.4",
     "react-test-renderer": "^16.9.0"
   }
 }
